@@ -1,0 +1,100 @@
+@keyframes hover-up-fire {
+  from {
+    transform: translateY(100%);
+  }
+  30% {
+    transform: translateY(0);
+  }
+  70% {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes hover-up-uphalf {
+  from {
+    transform: translateY(100%);
+  }
+  30% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes hover-up-downhalf {
+  from {
+    transform: translateY(0);
+  }
+  10% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-100%);
+  }
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  //margin: 50px 0 10px;
+  z-index: 1000;
+
+  :global {
+    .p-tabmenu-nav {
+      justify-content: flex-start;
+    }
+    .p-tab.p-tab-active .p-menuitem-link, .p-menuitem-link:hover {
+      color: rgb(216, 216, 216);
+    }
+    .p-tablist-tab-list, .p-tabmenu-nav, .p-tab.p-tab-active, .p-menuitem-link {
+      background-color: transparent;
+      border-color: transparent;
+    }
+    .p-tab {
+      //margin: -50px 0 -10px;
+      //padding: 50px 0 10px;
+    }
+    .p-tab {
+      height: 100%;
+      border-color: transparent;
+
+      border-radius: 0;
+      color: rgba(216, 216, 216, 0.7);
+      transition: color 0.2s ease-in-out;
+
+      overflow: hidden;
+
+      &:not(.p-tab-active):not(.p-disabled):hover  {
+        border-color: transparent;
+        color: rgba(216, 216, 216, 1)
+      }
+    }
+    .p-tab::before, .p-tab::after{
+      content: "";
+      display: inline-block;
+      position: absolute;
+      background-color: rgba(255, 255, 255, 0.247);
+      width: 100%;
+      height: 100%;
+      inset: 0;
+      animation-duration: 1s;
+      transform: translateY(100%);
+    }
+    .p-tab:hover::before {
+      animation-name: \:local(hover-up-uphalf);
+      transform: translateY(0);
+    }
+    .p-tab:focus::after {
+      animation-name: \:local(hover-up-fire);
+      transform: translateY(-100%);
+    }
+    .p-highlight .p-menuitem-link::before {
+      animation-name: \:local(hover-up-downhalf);
+      transform: translateY(-100%);
+    }
+    .p-tablist-active-bar {
+      display: none;
+    }
+  }
+}
