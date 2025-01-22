@@ -22,7 +22,7 @@ import {ref, defineComponent} from 'vue'
 import NoteView from '../views/NoteView.vue'
 
 export const TryDynamicRoutingComponent = defineComponent(() => {
-   const tryRoutePath = ref('')
+   const tryRoutePath = ref('DevNote.mdx')
    return () => (
    <>
       <input value={tryRoutePath.value} onChange={(e) => tryRoutePath.value = e.target.value} />
@@ -68,4 +68,4 @@ export const TryDynamicRoutingComponent = defineComponent(() => {
 
    <TryDynamicRoutingComponent />
 
-   
+    -- 2025/01/23

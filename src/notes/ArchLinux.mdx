@@ -2,16 +2,49 @@
 
 But no use in Arch (Linux 6.10.4, KDE Plasma 6, linuxqq)
 
-VSCode no fcitx in KDE:
+## VSCode no fcitx in KDE:
 [fcitx-im.org/wiki](https://fcitx-im.org/wiki/Using_Fcitx_5_on_Wayland#KDE_Plasma)
 
 This confirmed work. 我现在可以输入中文。Also: apply the same parameter to linuxqq, then get best experience, and the problem above got fixed too.
 
-Fix flickering:
+## Fix flickering:
 seems like a ozone bug. use `--enable-features=UseOzonePlatform --ozone-platform-hint=auto --enable-wayland-ime`, instead of `--ozone-platform=wayland`
 
-ark archive manager gb2312 charset:
+## ark archive manager gb2312 charset:
 [Install p7zip plugin & disable libzip](https://blog.csdn.net/Sheeplib/article/details/113695175)
 
-compiled KDE addons on Arch from the AUR should be rebuilt after Plasma update:
+## compiled KDE addons on Arch from the AUR should be rebuilt after Plasma update:
 `paru -S --rebuild`
+
+## Wine Mirror's Edge:
+
+This is an old EA game released in 2009. I managed to get it running on Win 10 but not Win 11.
+
+So I tried wine. Luckily I finally pickled all the problems and played happily.
+
+At first it cannot be launched, complaining 'Failed to find default engine .ini ...' or some dlls are missing.
+The solution is to launch the Mirror's Edge.exe in Binaries/ folder, not the one in the root.
+
+Then the game launched, but with no sound in game (only startup video has sound). The solution is to install dx9:
+Thx [**\@o.O | Whoopsy** from Steam Community](https://steamcommunity.com/app/70620/discussions/2/353915847942545341/)
+
+> What happend: Running the game on Windows 10 and / or running the game on Linux with WINE will play no sound what so ever.
+> 
+> A possible fix: You may need the DirectX (9) End User Runtimes June10 Update
+>
+> You can download it here (Official Source)
+> [https://www.microsoft.com/en-us/download/details.aspx?id=8109](https://www.microsoft.com/en-us/download/details.aspx?id=8109)
+
+You can change game resolution in game settings then.
+
+The game is now playable and is smooth, but to me, I want to use an XBox Controller,
+which is not recognized by the game in wine.
+
+So I tried my luck on Proton. I do all the settings above in proton (using protontricks),
+and XBox controller is just usable! only the xbox led light is not lighted, but that doesn't matter.
+I learned that nowadays linux came with out-of-box support for controllers, so that maybe wouldnt be a problem.
+
+The good thing of proton is that when i tried to alt+tab switch to another window on kde, the game wont stuck.
+and obs also works well with it on pipewire (i captured the whole screen if you mind).
+
+I've tried wine many (maybe 7 or 8?) years ago, and never thought it can be as smooth as today!
