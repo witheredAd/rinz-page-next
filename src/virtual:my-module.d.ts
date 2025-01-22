@@ -3,7 +3,7 @@ declare module "virtual:note-config" {
     path: string,
     component: () => Promise<typeof import("*.mdx")>,
   }
-  export const noteMenu: TMenuItem[];
+  export const noteRoutes: TMenuItem[];
 }
 
 declare module "virtual:note-config/page*" {
