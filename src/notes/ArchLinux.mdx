@@ -6,3 +6,12 @@ VSCode no fcitx in KDE:
 [fcitx-im.org/wiki](https://fcitx-im.org/wiki/Using_Fcitx_5_on_Wayland#KDE_Plasma)
 
 This confirmed work. 我现在可以输入中文。Also: apply the same parameter to linuxqq, then get best experience, and the problem above got fixed too.
+
+Fix flickering:
+seems like a ozone bug. use `--enable-features=UseOzonePlatform --ozone-platform-hint=auto --enable-wayland-ime`, instead of `--ozone-platform=wayland`
+
+ark archive manager gb2312 charset:
+[Install p7zip plugin & disable libzip](https://blog.csdn.net/Sheeplib/article/details/113695175)
+
+compiled KDE addons on Arch from the AUR should be rebuilt after Plasma update:
+`paru -S --rebuild`

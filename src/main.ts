@@ -20,3 +20,9 @@ app.use(PrimeVue, {
 })
 
 app.mount('#app')
+
+import('virtual:note-config/page0').then((p) => {
+  console.log(p);
+})
+
+import('virtual:note-config/page3')

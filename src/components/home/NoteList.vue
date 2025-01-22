@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { noteMenu } from 'virtual:note-config'
+import { noteRoutes } from 'virtual:note-config'
 import NoteCard from './note-list/NoteCard.vue'
 
-const notes = noteMenu;
+const notes = noteRoutes;
 console.log(notes)
 </script>
 

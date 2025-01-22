@@ -10,3 +10,62 @@ TODO:
     And Vite plugin might allow you to respond to every file change.
 
     -- 2024/8/20
+ - The problem behind the dynamic pagination is that,
+   even that you can dynamically load the url & abstract of notes on different pages, 
+   you cannot dynamically get that when it's accessed directly from a url.
+   
+   Or can you? Maybe try route guard when route fail?
+
+    -- 2024/11/28
+
+import {ref, defineComponent} from 'vue'
+import NoteView from '../views/NoteView.vue'
+
+export const TryDynamicRoutingComponent = defineComponent(() => {
+   const tryRoutePath = ref('')
+   return () => (
+   <>
+      <input value={tryRoutePath.value} onChange={(e) => tryRoutePath.value = e.target.value} />
+      当前路由：{tryRoutePath.value}
+      <NoteView noteName={tryRoutePath.value} />
+   </>
+   )
+})
+
+ - 今天解决了动态路由问题，好耶！
+
+   虽然和本来想的实现不太一样。
+   本来想的是，笔记应该由 SSG 生成 raw HTML，
+   然后成为实际存在于构建产物中的路径。
+   访问相应 url 时，直接去服务器上找对应路径的 HTML 进行加载。
+   
+   而当前的实现是，将笔记由 vite/rollup 打包为 js，
+   然后把笔记文件名作为 NoteView 的一个路由参数，
+   在 NoteView 内动态引入。
+
+   这里要使用 Vue 的异步组件。 Thx: 
+   [https://zhuanlan.zhihu.com/p/643511820](https://zhuanlan.zhihu.com/p/643511820)
+   使用了 Vue 的 `defineAsyncComponent` 宏，大概实现形式长这个样子：
+
+   ```Vue
+   <script lang="ts" setup>
+   ...
+   const noteContent = computed(() => {
+      const noteName = props.noteName
+      if (noteName.endsWith('mdx')) {
+         return defineAsyncComponent(
+            () => import(`../notes/${noteName.slice(0, noteName.length - 4)}.mdx`)
+         )
+      }
+   })
+   </script>
+   <template>
+      <component :is="noteContent" />
+   </template>
+   ```
+
+   可以在此处尝试一下动态路由：
+
+   <TryDynamicRoutingComponent />
+
+   

@@ -1,1 +1,11 @@
 [zh.javascript.info](https://zh.javascript.info/comparison)
+
+In case you find that an error shows on the line 1 of jsconfig, add the following code snippet to your `.vscode/settings.json`: 
+
+```json
+  "json.schemas": [
+    { 
+      "$schema": "https://json.schemastore.org/jsconfig" 
+    }
+  ]
+```

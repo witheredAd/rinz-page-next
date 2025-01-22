@@ -5,3 +5,7 @@ declare module "virtual:note-config" {
   }
   export const noteMenu: TMenuItem[];
 }
+
+declare module "virtual:note-config/page*" {
+  export const value: number;
+}
