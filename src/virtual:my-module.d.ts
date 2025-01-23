@@ -1,9 +1,12 @@
 declare module "virtual:note-config" {
-  type TMenuItem = {
+  type TNoteMetadata = {
     path: string,
-    component: () => Promise<typeof import("*.mdx")>,
+    meta: {
+      title?: string,
+      desc?: string,
+    }
   }
-  export const noteRoutes: TMenuItem[];
+  export const noteMetadata: TNoteMetadata[];
 }
 
 declare module "virtual:note-config/page*" {

@@ -5,6 +5,8 @@ import { defineConfig } from 'vite'
 import mdx from '@mdx-js/rollup'
 import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
+import remarkFrontmatter from 'remark-frontmatter'
+import remarkMdxFrontmatter from 'remark-mdx-frontmatter'
 import rehypeStarryNight from 'rehype-starry-night'
 import { all } from '@wooorm/starry-night'
 
@@ -20,7 +22,7 @@ export default defineConfig({
     noteAutoPack(),
     mdx({
       jsxImportSource: 'vue',
-      remarkPlugins: [remarkMath],
+      remarkPlugins: [remarkMath, remarkFrontmatter, [remarkMdxFrontmatter, { name: '__page' }]],
       rehypePlugins: [rehypeKatex, [rehypeStarryNight, { grammars: all }]],
     }),
     vue(),

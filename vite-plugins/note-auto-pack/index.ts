@@ -1,5 +1,7 @@
 import { readdirSync, statSync } from 'fs'
 import path from 'path'
+import { readSync } from 'to-vfile'
+import { matter } from 'vfile-matter'
 
 const pwd = process.cwd()
 const noteDir = `${pwd}/src/notes/`
@@ -7,6 +9,13 @@ const noteDir = `${pwd}/src/notes/`
 type TNotePackPluginConfig = {
   notesPerPage?: number
 };
+type TNoteMetadata = {
+  path: string,
+  meta: {
+    title?: string,
+    desc?: string,
+  }
+}
 
 const range = (start: number, end: number) => {
   return [...Array(end - start).keys()].map((item) => item + start)
@@ -19,7 +28,7 @@ export default function NotePackPlugin(
   const resolvedVirtualModuleId = '\0' + virtualModuleId
   let numOfPages = 1
   const noteMenus: string[] = []
-  let noteRoutes: string = ""
+  let noteMetadata: TNoteMetadata[] = []
 
   return {
     name: 'rollup-plugin-rinz-note-pack',
@@ -44,12 +53,17 @@ export default function NotePackPlugin(
           return b.time - a.time;
         })
         .map(item => item.name)
-      noteRoutes = noteFileSorted
-        .map(filename => `{
-          path: '${filename}',
-          component: () => import('@/notes/${filename}'),
-        }`)
-        .join(',')
+      
+      noteMetadata = noteFileSorted
+        .map(filename => {
+          const vfile = readSync(`${noteDir}${filename}`)
+          matter(vfile)
+          return {
+            path: filename,
+            meta: vfile.data.matter ?? {},
+          }
+        })
+      
       const notesPerPage = props.notesPerPage ?? noteFileSorted.length
       for (const i of range(0, 
         Math.ceil(noteFileSorted.length / notesPerPage)
@@ -64,19 +78,12 @@ export default function NotePackPlugin(
           .join(',')
         noteMenus.push(`[${noteMenu}]`)
       }
-      console.log(noteRoutes)
     },
     load(id: string) {
       if (id === resolvedVirtualModuleId) {
-        const noteMenu: string[] = []
-
+        console.log(`export const noteMetadata = ${JSON.stringify(noteMetadata)}`)
         return (`
-          export const noteMenu = [
-            ${noteMenus.join(',')}
-          ]
-          export const noteRoutes = [
-            ${noteRoutes}
-          ]
+          export const noteMetadata = ${JSON.stringify(noteMetadata)}
         `)
       } else if (id.startsWith('\0' + virtualModuleId)) {
         const subModuleId = new RegExp(`^\0${virtualModuleId}/(.*?)$`).exec(id)?.[1]

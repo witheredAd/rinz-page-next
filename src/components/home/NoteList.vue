@@ -1,15 +1,19 @@
 <script setup lang="ts">
-import { noteRoutes } from 'virtual:note-config'
+import { noteMetadata } from 'virtual:note-config'
 import NoteCard from './note-list/NoteCard.vue'
 
-const notes = noteRoutes;
+const notes = noteMetadata;
 console.log(notes)
 </script>
 
 <template>
   <ul class="container">
     <li class="card-wrapper" v-for="item in notes">
-      <NoteCard :title="item.path" :content="item.component.toString()" :url="`/note/${item.path}`"/>
+      <NoteCard
+        :title="item.meta.title ?? item.path"
+        :content="item.meta.desc ?? ''"
+        :url="`/note/${item.path}`"
+      />
     </li>
   </ul>
 </template>
