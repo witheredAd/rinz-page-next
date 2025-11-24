@@ -16,6 +16,9 @@ path.join();
 
 $123$
 
-$$
+<!-- $$
 \lim_{x\rightarrow\infty} \ln x - x + 1
+$$ -->
+$$
+lim_(x->infinity) ln x - x + 1
 $$
