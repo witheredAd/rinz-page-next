@@ -1,0 +1,171 @@
+/**
+ * @typedef {import('hast').ElementContent} ElementContent
+ * @typedef {import('hast').Root} Root
+ * @typedef {import('vfile').VFile} VFile
+ */
+
+import { fromHtmlIsomorphic } from 'hast-util-from-html-isomorphic';
+import { toText } from 'hast-util-to-text';
+import { NodeCompiler } from '@myriaddreamin/typst-ts-node-compiler';
+import { SKIP, visitParents } from 'unist-util-visit-parents';
+/** @type {Readonly<Options>} */
+const emptyOptions = {};
+/** @type {ReadonlyArray<unknown>} */
+const emptyClasses = [];
+
+/**
+ * Render elements with a `language-math` (or `math-display`, `math-inline`)
+ * class with KaTeX.
+ *
+ * @param {Readonly<Options> | null | undefined} [options]
+ *   Configuration (optional).
+ * @returns
+ *   Transform.
+ */
+export default function rehypeTypstContent(options) {
+  const settings = options || emptyOptions;
+
+  /**
+   * Transform.
+   *
+   * @param {Root} tree
+   *   Tree.
+   * @param {VFile} file
+   *   File.
+   * @returns {undefined}
+   *   Nothing.
+   */
+  return async function (tree, file) {
+    const matches = [];
+    visitParents(tree, 'element', (...args) => {
+      matches.push(args);
+      return tree;
+    });
+    const visitor = async function (element, parents) {
+      const classes = Array.isArray(element.properties.className)
+        ? element.properties.className
+        : emptyClasses;
+      // This class can be generated from markdown with ` ```math `.
+      const languageTypst = classes.includes('language-typst');
+      // Any class is fine.
+      if (!languageTypst) {
+        return;
+      }
+
+      let parent = parents[parents.length - 1];
+      let scope = element;
+
+      // If this was generated with ` ```math `, replace the `<pre>` and use
+      // display.
+      if (
+        element.tagName === 'code' &&
+        languageTypst &&
+        parent &&
+        parent.type === 'element' &&
+        parent.tagName === 'pre'
+      ) {
+        scope = parent;
+        parent = parents[parents.length - 2];
+      }
+
+      /* c8 ignore next -- verbose to test. */
+      if (!parent) return;
+
+      const value = toText(scope, { whitespace: 'pre' });
+
+      /** @type {Array<ElementContent> | string | undefined} */
+      let result;
+
+      try {
+        result = await renderToSVGString(value);
+      } catch (error) {
+        const cause = /** @type {Error} */ (error);
+        file.message('Could not render math with typst', {
+          ancestors: [...parents, element],
+          cause,
+          place: element.position,
+          source: 'rehype-typst',
+        });
+
+        result = [
+          {
+            type: 'element',
+            tagName: 'span',
+            properties: {
+              className: ['typst-error'],
+              style: 'color:' + (settings.errorColor || '#cc0000'),
+              title: String(error),
+            },
+            children: [{ type: 'text', value }],
+          },
+        ];
+      }
+
+      if ('svg' in result) {
+        const root = fromHtmlIsomorphic(result.svg, { fragment: true });
+        const defaultEm = 11;
+        const height = parseFloat(root.children[0].properties['dataHeight']);
+        const width = parseFloat(root.children[0].properties['dataWidth']);
+        const shift = height - result.baselinePosition;
+        const shiftEm = shift / defaultEm;
+        root.children[0].properties.style = `vertical-align: -${shiftEm}em;`;
+        root.children[0].properties.height = `${height / defaultEm}em`;
+        root.children[0].properties.width = `${width / defaultEm}em`;
+        if (!root.children[0].classNames) root.children[0].classNames = [];
+
+        root.children[0].properties.style += '; display: block; margin: 0 auto;';
+        root.children[0].classNames;
+
+        result = /** @type {Array<ElementContent>} */ (root.children);
+      }
+
+      const index = parent.children.indexOf(scope);
+      parent.children.splice(index, 1, ...result);
+      return SKIP;
+    };
+    const promises = matches.map(async args => {
+      await visitor(...args);
+    });
+    await Promise.all(promises);
+  };
+}
+
+/**
+ * @type {NodeCompiler}
+ */
+let compilerIns;
+
+async function renderToSVGString(code) {
+  const $typst = (compilerIns ||= NodeCompiler.create());
+  const res = renderToSVGString_($typst, code);
+  $typst.evictCache(10);
+  return res;
+}
+
+/**
+ *
+ * @param {NodeCompiler} $typst
+ * @returns
+ */
+async function renderToSVGString_($typst, code) {
+  const displayMathTemplate = `
+#set page(height: auto, width: 533.3pt, margin: 0pt)
+
+${code}
+`;
+  const mainFileContent = displayMathTemplate;
+  const docRes = $typst.compile({ mainFileContent });
+  if (!docRes.result) {
+    const diags = $typst.fetchDiagnostics(docRes.takeDiagnostics());
+    console.error(diags);
+    return {};
+  }
+  const doc = docRes.result;
+
+  const svg = $typst.svg(doc);
+  const res = {
+    svg,
+  };
+
+  return res;
+}

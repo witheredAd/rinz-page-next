@@ -4,6 +4,7 @@ declare module "virtual:note-config" {
     meta: {
       title?: string,
       desc?: string,
+      specTag?: string,
     }
   }
   export const noteMetadata: TNoteMetadata[];

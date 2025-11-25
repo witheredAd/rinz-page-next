@@ -9,6 +9,7 @@ import remarkFrontmatter from 'remark-frontmatter'
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter'
 import rehypeStarryNight from 'rehype-starry-night'
 import rehypeTypst from '@myriaddreamin/rehype-typst'
+import rehypeTypstContent from '@local/rehype-typst-content'
 import { all } from '@wooorm/starry-night'
 
 import vue from '@vitejs/plugin-vue'
@@ -24,7 +25,7 @@ export default defineConfig({
     mdx({
       jsxImportSource: 'vue',
       remarkPlugins: [remarkMath, remarkFrontmatter, [remarkMdxFrontmatter, { name: '__page' }]],
-      rehypePlugins: [rehypeTypst, [rehypeStarryNight, { grammars: all }]],
+      rehypePlugins: [rehypeTypst, rehypeTypstContent, [rehypeStarryNight, { grammars: all }]],
     }),
     vue(),
     vueJsx(),

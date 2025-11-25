@@ -1,0 +1,3 @@
+packages:
+  - '.'                       # 根目录也是一个包（主应用）
+  - 'vite-plugins/rehype-typst-content'          # vite-plugins 目录下的rehype-typst-content子目录是包

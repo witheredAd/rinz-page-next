@@ -16,6 +16,7 @@
     "@myriaddreamin/rehype-typst": "0.7.0-rc1",
     "@primevue/themes": "^4.0.4",
     "@wooorm/starry-night": "^3.4.0",
+    "@local/rehype-typst-content": "workspace:*",
     "pinia": "^2.1.7",
     "primevue": "^4.0.4",
     "rehype-katex": "^7.0.0",

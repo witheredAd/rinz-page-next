@@ -13,6 +13,7 @@ console.log(notes)
         :title="item.meta.title ?? item.path"
         :content="item.meta.desc ?? ''"
         :url="`/note/${item.path}`"
+        :specTag="item.meta.specTag"
       />
     </li>
   </ul>
