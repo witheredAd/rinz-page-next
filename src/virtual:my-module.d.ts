@@ -7,9 +7,10 @@ declare module "virtual:note-config" {
       specTag?: string,
     }
   }
-  export const noteMetadata: TNoteMetadata[];
-}
 
-declare module "virtual:note-config/page*" {
-  export const value: number;
+  type TNoteMap = {
+    [key: string]: TNoteMetadata[]
+  }
+
+  export const noteMap: TNoteMap;
 }

@@ -11,13 +11,15 @@
     "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
+    "@local/rehype-typst-content": "workspace:*",
     "@mdx-js/rollup": "^3.0.1",
     "@mdx-js/vue": "^3.0.1",
     "@myriaddreamin/rehype-typst": "0.7.0-rc1",
     "@primevue/themes": "^4.0.4",
     "@wooorm/starry-night": "^3.4.0",
-    "@local/rehype-typst-content": "workspace:*",
+    "moment": "^2.30.1",
     "pinia": "^2.1.7",
+    "primeicons": "^7.0.0",
     "primevue": "^4.0.4",
     "rehype-katex": "^7.0.0",
     "rehype-starry-night": "^2.1.0",

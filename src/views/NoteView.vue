@@ -8,18 +8,20 @@ useKatexCSS()
 useStarryNightCSS()
 
 const props = defineProps<{
-  noteName: string
+  noteName: string,
+  folder: string
 }>()
 
 const noteContent = computed(() => {
   const noteName = props.noteName
+  const noteFolder = props.folder
   if (noteName.endsWith('mdx')) {
     return defineAsyncComponent(
-      () => import(`../notes/${noteName.slice(0, noteName.length - 4)}.mdx`)
+      () => import(`../notes/${noteFolder}/${noteName.slice(0, noteName.length - 4)}.mdx`)
     )
   } else if (noteName.endsWith('md')) {
     return defineAsyncComponent(
-      () => import(`../notes/${noteName.slice(0, noteName.length - 3)}.md`)
+      () => import(`../notes/${noteFolder}/${noteName.slice(0, noteName.length - 3)}.md`)
     )
   }
 })
