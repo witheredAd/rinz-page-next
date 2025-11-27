@@ -145,7 +145,7 @@ function openNote(note: NoteItem) {
         <NoteCard
           :title="note.meta.title ?? note.path"
           :content="note.meta.desc ?? ''"
-          :specTag="note.meta.specTag || note.category"
+          :specTag="note.meta.SpecTag || note.category"
           :clickable="false" 
           :date="note.meta.date" 
           :color="getMeta(note.category).color"

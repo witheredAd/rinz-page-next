@@ -13,7 +13,7 @@ type TNoteMetadata = {
     title?: string,
     desc?: string,
     date?: string,
-    specTag?: string,
+    SpecTag?: string,
   }
 }
 

@@ -1,7 +1,7 @@
 ---
 title: Typst 测试
 desc: 这是一段 Typst 的测试ee
-specTag: Typst
+SpecTag: Typst
 ---
 
 ```typst
