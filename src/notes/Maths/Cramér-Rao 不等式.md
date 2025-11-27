@@ -1,6 +1,9 @@
 ---
-Published: "True"
+Published: 'True'
 SpecTag: Maths
+desc: >-
+  估计类的方差下界。[!note] 定义 当总体分布族 ${p(x;theta);theta in Theta}$ 满足：支撑 $A_theta =
+  {x;p(x;theta)>0}$ 与 $theta
 ---
 
 

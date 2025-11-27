@@ -1,6 +1,9 @@
 ---
-Published: "True"
+Published: 'True'
 SpecTag: Maths
+desc: >-
+  #let project( title: [], doc ) = { set text( font: ("Linux Libertine", "Source
+  Han Serif SC"), size:
 ---
 
 ```typst

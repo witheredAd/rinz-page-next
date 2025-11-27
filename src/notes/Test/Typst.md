@@ -2,7 +2,7 @@
 title: Typst 测试
 desc: 这是一段 Typst 的测试ee
 SpecTag: Test
-Published: "True"
+Published: 'True'
 ---
 
 ```typst
