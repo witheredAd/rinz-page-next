@@ -26,6 +26,7 @@
 > **正则条件**：
 > 1. 支撑集 $A_theta = {x;p(x;theta)>0}$ 与 $theta$ 无关
 > 2. $p(x;theta)$ 关于 $theta$ 足够平滑，且变化率有界（一般满足）
+>
 > 满足正则条件的总体分布族，称为 Cramér-Rao 正则族。
 > 
 > 对于这些分布族，对一切 $theta in Theta$，对任意满足 $E_theta|T| < +infinity$ （期望有界）的统计量 $T(bold(x))$，有
@@ -65,7 +66,7 @@
 
 
 
-> [!important] 正则条件
+> [!warning] 正则条件
 > 正则条件存在的意义实际上是：
 > $E_theta (T)$ 是一个变上下限积分 $integral_a(theta)^b(theta) f(t, theta) d t$。对其求导，根据莱布尼茨法则，有：
 > $$ d/(d theta) E_theta (T) = 

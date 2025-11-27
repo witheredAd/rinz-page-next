@@ -1,4 +1,5 @@
 import './assets/main.css'
+import 'rehype-callouts/theme/obsidian'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'

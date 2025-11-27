@@ -5,10 +5,10 @@ import { defineConfig } from 'vite'
 import mdx from '@mdx-js/rollup'
 import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
-import remarkNotes from 'remark-notes-plugin'
 import remarkFrontmatter from 'remark-frontmatter'
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter'
 import rehypeStarryNight from 'rehype-starry-night'
+import rehypeCallouts from 'rehype-callouts'
 import rehypeTypst from '@myriaddreamin/rehype-typst'
 import rehypeTypstContent from '@local/rehype-typst-content'
 import { all } from '@wooorm/starry-night'
@@ -25,8 +25,8 @@ export default defineConfig({
     noteAutoPack(),
     mdx({
       jsxImportSource: 'vue',
-      remarkPlugins: [remarkMath, remarkFrontmatter, [remarkMdxFrontmatter, { name: '__page' }], remarkNotes],
-      rehypePlugins: [rehypeTypstContent, [rehypeStarryNight, { grammars: all }]],
+      remarkPlugins: [remarkMath, remarkFrontmatter, [remarkMdxFrontmatter, { name: '__page' }]],
+      rehypePlugins: [rehypeCallouts, rehypeTypstContent, [rehypeStarryNight, { grammars: all }]],
     }),
     vue(),
     vueJsx(),
