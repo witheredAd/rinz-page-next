@@ -17,9 +17,9 @@ interface NoteItem {
 // --- 1. 确保元数据定义完整 (保持你现有的即可，确认有 color 和 icon) ---
 const categoryMeta: Record<string, { color: string; icon: string }> = {
   'DevNotes': { color: 'var(--p-blue-500, #3B82F6)', icon: 'pi pi-code' },
-  'Language': { color: 'var(--p-teal-500, #14B8A6)', icon: 'pi pi-globe' },
+  '翻译': { color: 'var(--p-teal-500, #14B8A6)', icon: 'pi pi-globe' },
   'Maths':    { color: 'var(--p-orange-500, #F97316)', icon: 'pi pi-calculator' },
-  'Tests':    { color: 'var(--p-purple-500, #A855F7)', icon: 'pi pi-file-edit' },
+  '论文阅读':    { color: 'var(--p-purple-500, #A855F7)', icon: 'pi pi-file-edit' },
   'default':  { color: 'var(--p-surface-500, #64748b)', icon: 'pi pi-folder' },
 };
 // 辅助函数：获取分类的元数据
