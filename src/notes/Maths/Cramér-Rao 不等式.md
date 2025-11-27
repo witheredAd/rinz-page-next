@@ -1,3 +1,9 @@
+---
+Published: "True"
+SpecTag: Maths
+---
+
+
 估计类的方差下界。
 
 > [!note] 定义
@@ -26,7 +32,7 @@
 > **正则条件**：
 > 1. 支撑集 $A_theta = {x;p(x;theta)>0}$ 与 $theta$ 无关
 > 2. $p(x;theta)$ 关于 $theta$ 足够平滑，且变化率有界（一般满足）
->
+> 
 > 满足正则条件的总体分布族，称为 Cramér-Rao 正则族。
 > 
 > 对于这些分布族，对一切 $theta in Theta$，对任意满足 $E_theta|T| < +infinity$ （期望有界）的统计量 $T(bold(x))$，有

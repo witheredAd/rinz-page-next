@@ -1,3 +1,8 @@
+---
+Published: "True"
+SpecTag: Maths
+---
+
 ```typst
 #let project(
   title: [],

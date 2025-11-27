@@ -1,4 +1,8 @@
-# MechRevo 14X 引导修复记录
+---
+Published: "True"
+SpecTag: 搞机
+---
+
 
 想用 easyuefi 从硬盘安装 ubuntu 的，结果把引导干爆了
 记录一下很神奇的救砖经历
