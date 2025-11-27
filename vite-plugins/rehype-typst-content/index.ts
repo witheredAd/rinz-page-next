@@ -1,17 +1,17 @@
-/**
- * @typedef {import('hast').ElementContent} ElementContent
- * @typedef {import('hast').Root} Root
- * @typedef {import('vfile').VFile} VFile
- */
-
 import { fromHtmlIsomorphic } from 'hast-util-from-html-isomorphic';
 import { toText } from 'hast-util-to-text';
-import { NodeCompiler } from '@myriaddreamin/typst-ts-node-compiler';
+import { CompileDocArgs, NodeCompiler } from '@myriaddreamin/typst-ts-node-compiler';
 import { SKIP, visitParents } from 'unist-util-visit-parents';
+
+import type { Element, ElementContent, Root } from 'hast';
+import type { VFile } from 'vfile';
+
 /** @type {Readonly<Options>} */
 const emptyOptions = {};
 /** @type {ReadonlyArray<unknown>} */
 const emptyClasses = [];
+
+
 
 /**
  * Render elements with a `language-math` (or `math-display`, `math-inline`)
@@ -22,69 +22,71 @@ const emptyClasses = [];
  * @returns
  *   Transform.
  */
-export default function rehypeTypstContent(options) {
+export default function rehypeTypstContent(options?: {} | null) {
   const settings = options || emptyOptions;
 
-  /**
-   * Transform.
-   *
-   * @param {Root} tree
-   *   Tree.
-   * @param {VFile} file
-   *   File.
-   * @returns {undefined}
-   *   Nothing.
-   */
-  return async function (tree, file) {
+  return async function (tree: Root, file: VFile) {
     const matches = [];
     visitParents(tree, 'element', (...args) => {
       matches.push(args);
-      return tree;
     });
-    const visitor = async function (element, parents) {
+    
+    const visitor = async function (element: Element, parents) {
       const classes = Array.isArray(element.properties.className)
         ? element.properties.className
         : emptyClasses;
       // This class can be generated from markdown with ` ```math `.
       const languageTypst = classes.includes('language-typst');
+      
+      // This class can be generated from markdown with ` ```math `.
+      const languageMath = classes.includes('language-math');
+      // This class is used by `remark-math` for flow math (block, `$$\nmath\n$$`).
+      const mathDisplay = classes.includes('math-display');
+      // This class is used by `remark-math` for text math (inline, `$math$`).
+      const mathInline = classes.includes('math-inline');
+      let displayMode = mathDisplay;
+      const isMath = languageMath || mathDisplay || mathInline;
+
       // Any class is fine.
-      if (!languageTypst) {
+      if (!languageTypst && !languageMath && !mathDisplay && !mathInline) {
         return;
       }
 
       let parent = parents[parents.length - 1];
       let scope = element;
 
-      // If this was generated with ` ```math `, replace the `<pre>` and use
-      // display.
+      // If this was generated with ` ```typst/math `, replace the `<pre>` and use
+      // display(when math).
       if (
         element.tagName === 'code' &&
-        languageTypst &&
         parent &&
+        (languageTypst || languageMath) &&
         parent.type === 'element' &&
         parent.tagName === 'pre'
       ) {
         scope = parent;
         parent = parents[parents.length - 2];
+        if (languageMath) {
+          displayMode = true;
+        }
       }
 
       /* c8 ignore next -- verbose to test. */
       if (!parent) return;
 
       const value = toText(scope, { whitespace: 'pre' });
-
-      /** @type {Array<ElementContent> | string | undefined} */
-      let result;
+ 
+      let result: { html: string };
 
       try {
-        result = await renderToSVGString(value);
+        result = await renderToHTMLString(value, { isMath, displayMode });
       } catch (error) {
         const cause = /** @type {Error} */ (error);
-        file.message('Could not render math with typst', {
+        file.message('Could not render content with typst', {
           ancestors: [...parents, element],
           cause,
           place: element.position,
-          source: 'rehype-typst',
+          source: 'rehype-typst-content',
         });
 
         result = [
@@ -101,22 +103,16 @@ export default function rehypeTypstContent(options) {
         ];
       }
 
-      if ('svg' in result) {
-        const root = fromHtmlIsomorphic(result.svg, { fragment: true });
-        const defaultEm = 11;
-        const height = parseFloat(root.children[0].properties['dataHeight']);
-        const width = parseFloat(root.children[0].properties['dataWidth']);
-        const shift = height - result.baselinePosition;
-        const shiftEm = shift / defaultEm;
-        root.children[0].properties.style = `vertical-align: -${shiftEm}em;`;
-        root.children[0].properties.height = `${height / defaultEm}em`;
-        root.children[0].properties.width = `${width / defaultEm}em`;
-        if (!root.children[0].classNames) root.children[0].classNames = [];
-
-        root.children[0].properties.style += '; display: block; margin: 0 auto;';
-        root.children[0].classNames;
-
-        result = /** @type {Array<ElementContent>} */ (root.children);
+      if ('html' in result) {
+        const root = fromHtmlIsomorphic(result.html, { fragment: true });
+        
+        if (isMath && !displayMode) {
+          // For inline math, we need to extract the content of the body.
+          console.log(root.children[1])
+          result = /** @type {Array<ElementContent>} */ (root.children[1].children[1].children);
+        } else {
+          result = /** @type {Array<ElementContent>} */ (root.children);
+        }
       }
 
       const index = parent.children.indexOf(scope);
@@ -130,41 +126,75 @@ export default function rehypeTypstContent(options) {
   };
 }
 
-/**
- * @type {NodeCompiler}
- */
-let compilerIns;
-
-async function renderToSVGString(code) {
+let compilerIns: NodeCompiler;
+type RenderOptions = { isMath: boolean; displayMode: boolean };
+async function renderToHTMLString(code: string, { isMath, displayMode }: RenderOptions) {
   const $typst = (compilerIns ||= NodeCompiler.create());
-  const res = renderToSVGString_($typst, code);
+
+  const mainFileContent = (() => {
+    if (isMath) {
+      if (displayMode) {
+        return `
+#import "/vite-plugins/rehype-typst-content/packages/mathyml/lib.typ" as mathyml
+#import mathyml: to-mathml
+#import mathyml.prelude:*
+
+#show math.equation: to-mathml
+
+$ ${code} $`;
+      } else return `
+#import "/vite-plugins/rehype-typst-content/packages/mathyml/lib.typ" as mathyml
+#import mathyml: to-mathml
+#import mathyml.prelude:*
+
+#show math.equation: to-mathml
+
+$${code}$`;
+    } else return `
+#import "/vite-plugins/rehype-typst-content/packages/mathyml/lib.typ" as mathyml
+#import mathyml: to-mathml
+#import mathyml.prelude:*
+
+#show math.equation: to-mathml
+
+${code}`;
+  })();
+
+  const res = renderToHTMLString_($typst, { mainFileContent });
   $typst.evictCache(10);
   return res;
 }
 
-/**
- *
- * @param {NodeCompiler} $typst
- * @returns
- */
-async function renderToSVGString_($typst, code) {
-  const displayMathTemplate = `
-#set page(height: auto, width: 533.3pt, margin: 0pt)
+async function renderMathYMLStyle() {
+  const $typst = (compilerIns ||= NodeCompiler.create());
+  const styleContent = `
+#import "/vite-plugins/rehype-typst-content/packages/mathyml/lib.typ" as mathyml
+#mathyml.stylesheets()`;
+  const res = renderToHTMLString_($typst, { mainFileContent: styleContent });
+  $typst.evictCache(10);
+  return res;
+}
 
-${code}
-`;
-  const mainFileContent = displayMathTemplate;
-  const docRes = $typst.compile({ mainFileContent });
+async function renderToHTMLString_($typst: NodeCompiler, compileOptions: CompileDocArgs, resultType: 'body'|'hast' = 'body') {
+  const docRes = $typst.compileHtml(compileOptions);
   if (!docRes.result) {
-    const diags = $typst.fetchDiagnostics(docRes.takeDiagnostics());
-    console.error(diags);
-    return {};
+    console.log("Error compiling typst to HTML");
+    docRes.printDiagnostics();
+    return { html: "" };
   }
   const doc = docRes.result;
+  const html = $typst.tryHtml(doc);
+  if (!html.result) {
+    html.printDiagnostics();
+    return { html: `${html.takeDiagnostics()}` };
+  }
 
-  const svg = $typst.svg(doc);
+  if (resultType === 'hast') {
+    return html.result.hast();
+  }
+
   const res = {
-    svg,
+    html: html.result.body(),
   };
 
   return res;

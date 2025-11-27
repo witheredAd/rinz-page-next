@@ -27,6 +27,7 @@
     "remark-math": "^6.0.0",
     "remark-mdx-frontmatter": "^5.0.0",
     "remark-mdx-math-enhanced": "0.0.1-beta.3",
+    "remark-notes-plugin": "^2.0.0",
     "to-vfile": "^8.0.0",
     "vfile-matter": "^5.0.0",
     "vue": "^3.4.29",

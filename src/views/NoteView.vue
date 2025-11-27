@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router';
-import { useKatexCSS } from '@/stores/KatexCSSLazyLoader';
+import { useMathFontCSS } from '@/stores/MathFontCSSLazyLoader';
 import { useStarryNightCSS } from '@/stores/StarryNightCSSLoader';
 import { computed, defineAsyncComponent, watch } from 'vue';
 
-useKatexCSS()
+useMathFontCSS()
 useStarryNightCSS()
 
 const props = defineProps<{
