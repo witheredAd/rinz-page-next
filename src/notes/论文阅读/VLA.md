@@ -19,3 +19,10 @@ VLM骨干+小模型动作专家
 训练数据分布（文中称为 _recipe_）
 
 Diffusion 用于输出 Action 的连续分布（？）
+
+
+World Model emu3.5 V-JEPA2
+
+关于具身智能领域的两座大山 目前在具身领域，最火的... http://xhslink.com/o/7cJjzpoDI4c 
+复制后打开【小红书】查看笔记！
+
