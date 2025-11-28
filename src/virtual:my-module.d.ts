@@ -4,7 +4,7 @@ declare module "virtual:note-config" {
     meta: {
       title?: string,
       desc?: string,
-      specTag?: string,
+      SpecTag?: string,
     }
   }
 
