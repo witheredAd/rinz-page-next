@@ -16,3 +16,9 @@ a {
   }
 }
 
+blockquote {
+  border-left: 4px solid hsla(160, 100%, 37%, 1);
+  padding-left: 1em;
+  margin: 0;
+  color: hsla(160, 20%, 40%, 0.8);  /* use slightly green grey instead of gray */
+}
