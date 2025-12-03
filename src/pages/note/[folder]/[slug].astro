@@ -1,0 +1,53 @@
+---
+import { getCollection, render } from 'astro:content';
+import NoteLayout from '@/layouts/NoteLayout.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const allNotes = await getCollection('notes');
+  
+  // 🔍 调试：看看 Astro 到底读到了什么文件
+  console.log('-------------------------------------------');
+  console.log(`[Debug] 找到 ${allNotes.length} 个笔记文件`);
+  
+  const paths = allNotes.map(entry => {
+    // 打印每一个文件的原始信息
+    console.log(`[File] ID: ${entry.id}`);
+
+    // 尝试拆分
+    const parts = entry.id.split('/');
+    
+    // 如果 slug 里没有斜杠（说明可能不在子文件夹里，或者 slug 被修改了）
+    if (parts.length < 2) {
+      console.warn(`[Warning] 文件 ${entry.id} 似乎没有包含文件夹路径？`);
+      // 容错处理：如果没有文件夹，暂时把它归类到 "uncategorized" 或者跳过
+      return null; 
+    }
+
+    const folder = parts[0];
+    const slugName = parts.slice(1).join('/');
+
+    console.log(`   -> 生成路径: /note/${folder}/${slugName}`);
+
+    return {
+      params: { 
+        folder: folder, 
+        slug: slugName 
+      },
+      props: { entry },
+    };
+  }).filter(Boolean); // 过滤掉 null
+
+  console.log('-------------------------------------------');
+  return paths;
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<BaseLayout>
+    <NoteLayout>
+        <Content />
+    </NoteLayout>
+</BaseLayout>

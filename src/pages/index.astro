@@ -1,0 +1,11 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import App from "@/App.vue";
+import Search from "astro-pagefind/components/Search";
+---
+
+<BaseLayout>
+    <App client:load>
+        <Search id="search" className="pagefind-ui" uiOptions={{ showImages: false }} />
+    </App>
+</BaseLayout>

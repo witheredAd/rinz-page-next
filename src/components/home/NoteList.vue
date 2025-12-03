@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { noteMap } from 'virtual:note-config'
 import NoteCard from './note-list/NoteCard.vue'
 import { computed, nextTick, ref } from 'vue';
 import 'primeicons/primeicons.css';
-import { useRouter } from 'vue-router';
 
 // --- 数据处理 ---
 
@@ -13,6 +11,8 @@ interface NoteItem {
   meta: any;
   date?: string; 
 }
+
+const noteMap = {}
 
 // --- 1. 确保元数据定义完整 (保持你现有的即可，确认有 color 和 icon) ---
 const categoryMeta: Record<string, { color: string; icon: string }> = {
@@ -88,8 +88,6 @@ function setFilter(cat: string) {
   });
 }
 
-const router = useRouter();
-
 function openNote(note: NoteItem) {
   router.push(`/note/${note.path}`);
 }
@@ -151,6 +149,11 @@ function openNote(note: NoteItem) {
           :color="getMeta(note.category).color"
           :icon="getMeta(note.category).icon"
         />
+      </div>
+
+      
+      <div class="card-wrapper">
+        <slot />
       </div>
 
     </div>

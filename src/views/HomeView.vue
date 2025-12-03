@@ -4,7 +4,7 @@ import NoteList from "@/components/home/NoteList.vue";
 import { serverConfig } from "@/config/server"
 
 // --- 配置参数 ---
-const MAX_HEIGHT = window.innerHeight; // Banner 展开时的最大高度
+const MAX_HEIGHT = ref(0); // Banner 展开时的最大高度
 const MIN_HEIGHT = 52.5;  // Banner 收缩后的最小高度 (Navbar高度)
 
 const scrollY = ref(0);
@@ -12,14 +12,20 @@ const scrollY = ref(0);
 const updateState = () => {
   scrollY.value = window.scrollY;
 };
+const updateMaxHeight = () => {
+  MAX_HEIGHT.value = window.innerHeight;
+}
 
 onMounted(() => {
   updateState();
+  updateMaxHeight();
   window.addEventListener('scroll', updateState);
+  window.addEventListener('resize', updateMaxHeight);
 });
 
 onUnmounted(() => {
   window.removeEventListener('scroll', updateState);
+  window.removeEventListener('resize', updateMaxHeight);
 });
 
 // --- 核心计算 ---
@@ -27,28 +33,28 @@ onUnmounted(() => {
 // 1. Banner 的动态高度
 // 逻辑：初始 600，随着滚动减小，最小减到 60
 const bannerHeight = computed(() => {
-  const h = MAX_HEIGHT - scrollY.value;
+  const h = MAX_HEIGHT.value - scrollY.value;
   return Math.max(MIN_HEIGHT, h) + 'px';
 });
 
 // 2. 动态遮罩透明度 (可选，但推荐)
 // 逻辑：一开始比较透(0.3)，缩到最后变成深色(0.9)，保证文字清晰
 const overlayOpacity = computed(() => {
-  const progress = Math.min(scrollY.value / (MAX_HEIGHT - MIN_HEIGHT), 1);
+  const progress = Math.min(scrollY.value / (MAX_HEIGHT.value - MIN_HEIGHT), 1);
   return 0.3 + (0.6 * progress); // 从 0.3 变到 0.9
 });
 
 // 3. 标题缩放
 // 逻辑：随滚动从 1.0 缩小到 0.4
 const titleScale = computed(() => {
-  const progress = Math.min(scrollY.value / (MAX_HEIGHT - MIN_HEIGHT), 1);
+  const progress = Math.min(scrollY.value / (MAX_HEIGHT.value - MIN_HEIGHT), 1);
   return 1 - (0.6 * progress);
 });
 
 // 4. 标题位置微调
 // 当变成导航栏时，padding 需要减小，否则文字会掉出盒子
 const titlePadding = computed(() => {
-  const progress = Math.min(scrollY.value / (MAX_HEIGHT - MIN_HEIGHT), 1);
+  const progress = Math.min(scrollY.value / (MAX_HEIGHT.value - MIN_HEIGHT), 1);
   // 从 40px 减少到 10px (垂直居中)
   return (40 - (30 * progress)) + 'px';
 });
@@ -56,7 +62,7 @@ const titlePadding = computed(() => {
 </script>
 
 <template>
-  <div :style="{ height: `${MAX_HEIGHT}px`, width: '100%' }"></div>
+  <div :style="{ height: `100dvh`, width: '100%' }"></div>
 
   <div class="sticky-banner" :style="{ height: bannerHeight }">
     

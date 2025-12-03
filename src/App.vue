@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
 import NavBar from './components/NavBar.vue'
-import Footer from './components/Footer.vue'
+import HomeView from './views/HomeView.vue'
 </script>
 
 <template>
   <NavBar />
   <div id="filter-teleport-target"></div>
-  <RouterView />
-  <Footer />
+  <HomeView />
 </template>
 
 <style scoped>
