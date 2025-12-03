@@ -3,7 +3,7 @@ Published: 'True'
 SpecTag: 论文阅读
 desc: >-
   $pi_0$ (π0: A Vision-Language-Action Flow Model for General Robot
-  Control)Intuitively, training only
+  Control)Intuitively, training only...
 ---
 
 # $pi_0$ (π0: A Vision-Language-Action Flow Model for  General Robot Control)

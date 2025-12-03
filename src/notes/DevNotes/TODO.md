@@ -3,7 +3,7 @@ Published: 'True'
 SpecTag: DevNotes
 desc: >-
   Still many things i want to share:Unreal EngineCinema4D / BlenderArmbianESP32
-  / STM32 / ArduinoLLM /
+  / STM32 / ArduinoLLM /...
 ---
 
 

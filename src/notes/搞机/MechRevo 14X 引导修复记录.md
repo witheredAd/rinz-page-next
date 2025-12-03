@@ -3,7 +3,7 @@ Published: 'True'
 SpecTag: 搞机
 desc: >-
   想用 easyuefi 从硬盘安装 ubuntu 的，结果把引导干爆了 记录一下很神奇的救砖经历先后尝试了diskgenius和大白菜的win
-  pe，结果不仅没修好，还把efi分区给清掉了 然后发现微
+  pe，结果不仅没修好，还把efi分区给清掉了 然后发现微...
 ---
 
 
