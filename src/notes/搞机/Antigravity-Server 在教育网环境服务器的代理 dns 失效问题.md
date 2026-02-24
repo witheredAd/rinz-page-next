@@ -46,7 +46,7 @@ Antigravity 连接到服务器上时，默认不走代理，我使用了 `antiss
 
 ## 破局之道：无痛、防失联的终极架构
 
-为了在不破坏系统稳定性的前提下解决污染，最终采用的方案是：**将 Clash 作为本地独立 DNS 并阉割 IPv6，同时利用 `systemd-resolved` 的 Fallback 机制实现无缝降级。**
+为了在不破坏系统稳定性的前提下解决污染，最终采用的方案是：**将 Clash 作为本地独立 DNS，同时利用 `systemd-resolved` 的 Fallback 机制实现无缝降级。**
 
 ### 第一步：赋予 Clash 绑定特权端口的能力
 
@@ -57,9 +57,9 @@ Linux 规定 1024 以下的端口（如 DNS 的 53 端口）必须 root 权限�
 sudo setcap 'cap_net_bind_service=+ep' /usr/local/bin/clash
 ```
 
-### 第二步：配置 Clash DNS（阉割 IPv6）
+### 第二步：配置 Clash DNS
 
-修改 Clash 配置文件，让其监听一个本地独立的 IP（如 `127.0.0.153`），并**彻底关闭 IPv6 解析**。
+修改 Clash 配置文件，让其监听一个本地独立的 IP（如 `127.0.0.153`）.
 
 ```yaml
 dns:
