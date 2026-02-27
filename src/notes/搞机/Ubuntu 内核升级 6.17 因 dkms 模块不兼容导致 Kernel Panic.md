@@ -2,21 +2,26 @@
 Published: 'True'
 SpecTag: 搞机
 desc: >-
-  系统自动将 Ubuntu 内核升级到 6.17 后，重启无法进入系统，通过 grub 后亮紫屏，提示：Kernel panic! VFS: Unable
-  to mount rootfs on unkn...
+  系统自动将 Ubuntu 内核升级到 6.17 后，重启无法进入系统，通过 grub 后亮紫屏，提示：KERNAL PANIC! Please reboot
+  your machine. VFS: Un...
 ---
 
 系统自动将 Ubuntu 内核升级到 `6.17` 后，重启无法进入系统，通过 grub 后亮紫屏，提示：
 
 ```
-Kernel panic!
-VFS: Unable to mount rootfs on unknown-block(0,0)
-You need to reboot your machine.
+KERNAL PANIC!
+Please reboot your machine.
+VFS: Unable to mount root fs on unknown-block(0,0)
 ```
+
+![[IMG_20260227_094749.jpg]]
 
 ~~原来 Linux 也有蓝屏~~
 
 遇到这种情况，首先是通过重启进入 GRUB 的 Advanced Menu，选择上一个正常工作的旧内核（本例中为 `6.14`）进入系统，以便进行排查和修复。
+
+![[a1c4cdfcfa0679e6ca589e43a5d5c0ad.jpeg]]
+
 
 > [!Note]
 > AI 创作提示：本文由我和 Gemini 共同完成，但所有步骤都经人工验证，并确实解决了我的问题。
@@ -48,14 +53,16 @@ sudo dpkg --configure -a
 
 在这次命令的输出中，我观察到了 dpkg 具体的报错信息。
 
+![[7cea343599d8b7d142affc893ce1251d.jpeg]]
+
 _(注：内核升级失败的原因因人而异，有时是 /boot 分区空间不足。运行这个命令查看具体报错是排查的核心。)_
 
-在我的输出日志中，报错指向了 **DKMS 编译失败**，生成了一个crash文件在`/var/crash/v4l2xxxxx`（具体名字记不得了）. 输出大致上为：
+在我的输出日志中，报错指向了 **DKMS 编译失败**，生成了一个crash文件在 `/var/crash/v4l2loopback-dkms.0.crash`：
 
 ```
-Building initial module for  xxx
-ERROR: Cannot create report: [Errno 17] File exists: '/var/crash/v4l2xxx.crash'
-Error! Bad return status for module build on kernel: xxxx
+make -j32 KERNELRELEASE=6.17.0-14-generic....
+ERROR: Cannot create report: [Errno 17] File exists: '/var/crash/v4l2loopback-dkms.0.crash'
+Error! Bad return status for module build on kernel: 6.17.0-14-generic (x86_64)
 ```
 
 打开这个crash文件，提示：在编译 `v4l2loopback-0.15.0` 这个模块时，`v4l2loopback.c:2904:9` 产生 `implicit-function-declaration` 错误，提示编译器找不到 `setup_timer` 函数。
