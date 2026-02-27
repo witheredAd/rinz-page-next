@@ -5,7 +5,7 @@ import { serverConfig } from '@/config/server';
 <template>
   <div class="footer">
     <div>
-      2024 - 2025 {{ serverConfig.name }}.
+      2024 - 2026 {{ serverConfig.name }}.
     </div>
     <div>
       {{ serverConfig.slogan }}
