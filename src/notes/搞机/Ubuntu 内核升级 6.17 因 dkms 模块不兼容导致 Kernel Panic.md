@@ -102,3 +102,19 @@ sudo dpkg --configure -a
 
 在处理包依赖重置后，Ubuntu 自动启用了 gdm. 因为我不想它占用我的显存，所以进入系统后手动将其再次 disable.
 
+> [!Note]
+> 写在后面：
+> 
+> 最早是因为 CUDA 突然 init 不起来，查询[资料](https://stackoverflow.com/questions/43022843/nvidia-nvml-driver-library-version-mismatch#comment73133147_43022843)发现是内核加载的 nv 驱动版本在更新过程中没有卸载掉，导致和新安装的驱动库不兼容。
+> 
+> 如果是发现这个问题：`Failed to initialize NVML: Driver/library version mismatch`，可以优先考虑是不是这个问题。
+> 
+> 上面的[帖子](https://stackoverflow.com/questions/43022843/nvidia-nvml-driver-library-version-mismatch#comment73133147_43022843)里提供了检查版本号的方法：
+> 
+> You may find that the `versions` are different in these locations:
+>
+> 1. `dpkg -l | grep nvidia` (look at `nvidia-utils-xxx` package version). This version is reported by `NVML` and is showed by running `nvidia-smi`.
+> 2. `cat /proc/driver/nvidia/version` (look at the version of Kernel Module, `535.146` - for example). This version is read directly from the `proc` filesystem, populated by the NVIDIA driver.
+> 
+> 如果希望禁止 nv 驱动更新，也可以看上面的[资料](https://stackoverflow.com/questions/43022843/nvidia-nvml-driver-library-version-mismatch#comment73133147_43022843)。
+
