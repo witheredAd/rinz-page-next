@@ -25,6 +25,8 @@ default = true
 
 > [!info]
 > 最近几年 TUNA 常常断流，可以使用北外节点 `https://mirrors.bfsu.edu.cn/pypi/web/simple`
+> 
+> 参考：[nix-channels/store 下载较大文件时有大概率断流 #809 | tuna/issues](https://github.com/tuna/issues/issues/809)
 
 初始化 uv 项目
 ```bash
