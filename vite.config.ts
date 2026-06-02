@@ -18,6 +18,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
 import noteAutoPack from './vite-plugins/note-auto-pack/index'
+import remarkWikiImage from './vite-plugins/remark-wiki-image/index'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -25,7 +26,7 @@ export default defineConfig({
     noteAutoPack(),
     mdx({
       jsxImportSource: 'vue',
-      remarkPlugins: [remarkMath, remarkFrontmatter, [remarkMdxFrontmatter, { name: '__page' }]],
+      remarkPlugins: [remarkMath, remarkFrontmatter, remarkWikiImage, [remarkMdxFrontmatter, { name: '__page' }]],
       rehypePlugins: [rehypeCallouts, rehypeTypstContent, [rehypeStarryNight, { grammars: all }]],
     }),
     vue(),
