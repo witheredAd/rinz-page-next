@@ -9,10 +9,6 @@ export const tabConfig: TTabConfig = [
     title: '首页 Home',
   },
   {
-    url: '/note',
-    title: '笔记 Note',
-  },
-  {
     url: '/project',
     title: '项目 Proj',
   },
