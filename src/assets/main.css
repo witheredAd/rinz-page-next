@@ -50,3 +50,7 @@ img {
   max-width: 100%;
   height: auto;
 }
+
+mark {
+  background-color: hsla(129, 82%, 36%, 0.5);
+}

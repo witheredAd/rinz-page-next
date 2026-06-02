@@ -19,6 +19,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 import noteAutoPack from './vite-plugins/note-auto-pack/index'
 import remarkWikiImage from './vite-plugins/remark-wiki-image/index'
+import remarkSimpleNotation from './vite-plugins/remark-simple-notation/index'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -26,7 +27,7 @@ export default defineConfig({
     noteAutoPack(),
     mdx({
       jsxImportSource: 'vue',
-      remarkPlugins: [remarkMath, remarkFrontmatter, remarkWikiImage, [remarkMdxFrontmatter, { name: '__page' }]],
+      remarkPlugins: [remarkMath, remarkFrontmatter, remarkWikiImage, remarkSimpleNotation, [remarkMdxFrontmatter, { name: '__page' }]],
       rehypePlugins: [rehypeCallouts, rehypeTypstContent, [rehypeStarryNight, { grammars: all }]],
     }),
     vue(),
