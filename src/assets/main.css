@@ -22,3 +22,26 @@ blockquote {
   margin: 0;
   color: hsla(160, 20%, 40%, 0.8);  /* use slightly green grey instead of gray */
 }
+
+/* only modify inline code */
+code {
+  background-color: hsla(0, 0%, 74%, 0.1);
+  padding: 0.3em;
+  margin: 0;
+  border-radius: 4px;
+}
+
+/* for code blocks */
+pre code {
+  background-color: transparent;
+  padding: 0;
+  overflow-x: auto;
+}
+
+pre {
+  background-color: hsla(0, 0%, 74%, 0.1);
+  padding: 1em;
+  margin: 0;
+  border-radius: 8px;
+  overflow-x: auto;
+}
