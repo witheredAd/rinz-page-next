@@ -64,3 +64,9 @@ explicit = true
 url = "https://mirrors.bfsu.edu.cn/pypi/web/simple"
 default = true
 ```
+
+
+flash-attn wheel
+`https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.9.4/flash_attn-2.8.3+cu128torch2.11-cp311-cp311-linux_x86_64.whl`
+
+
