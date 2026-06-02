@@ -52,7 +52,7 @@ volta install pnpm
 
 （然后安装 claude < 2.1.149）
 ```bash
-npm install -g @anthropic-ai/claude
+npm install -g @anthropic-ai/claude-code=2.1.148
 ```
 设置 claude 
 ```json
@@ -63,3 +63,4 @@ npm install -g @anthropic-ai/claude
 	"hasCompletedOnboarding": true
 }
 ```
+这样处理后，暂时没有缓外过多的问题
