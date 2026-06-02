@@ -7,7 +7,9 @@ import Footer from './components/Footer.vue'
 <template>
   <NavBar />
   <div id="filter-teleport-target"></div>
-  <RouterView />
+  <div class="main-content">
+    <RouterView />
+  </div>
   <Footer />
 </template>
 
@@ -18,7 +20,7 @@ import Footer from './components/Footer.vue'
   margin-top: calc(100vh - 60px); 
   margin-bottom: calc(-100vh + 60px - 57.5px);
   top: 0;
-  width: 50%;
+  width: 80%;
   margin-left: auto;
   margin-right: auto;
 }

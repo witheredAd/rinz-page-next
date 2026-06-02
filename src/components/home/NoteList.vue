@@ -19,7 +19,10 @@ const categoryMeta: Record<string, { color: string; icon: string }> = {
   'DevNotes': { color: 'var(--p-blue-500, #3B82F6)', icon: 'pi pi-code' },
   '翻译': { color: 'var(--p-teal-500, #14B8A6)', icon: 'pi pi-globe' },
   'Maths':    { color: 'var(--p-orange-500, #F97316)', icon: 'pi pi-calculator' },
+  '小工具':    { color: 'var(--p-cyan-500, #6366F1)', icon: 'pi pi-wrench' },
+  '搞机':    { color: 'var(--p-red-500, #EF10B9)', icon: 'pi pi-desktop' },
   '论文阅读':    { color: 'var(--p-purple-500, #A855F7)', icon: 'pi pi-file-edit' },
+  '笔记':    { color: 'var(--p-green-500, #22C55E)', icon: 'pi pi-book' },
   'default':  { color: 'var(--p-surface-500, #64748b)', icon: 'pi pi-folder' },
 };
 // 辅助函数：获取分类的元数据
@@ -98,11 +101,12 @@ function openNote(note: NoteItem) {
 <template>
   <Teleport to="#filter-teleport-target">
     <nav class="filter-bar">
-      <button 
-        v-for="cat in categories" 
+      <button
+        v-for="cat in categories"
         :key="cat"
         class="filter-chip"
         :class="{ active: currentFilter === cat }"
+        :style="{ '--chip-color': getMeta(cat).color }"
         @click="setFilter(cat)"
       >
         {{ cat }}
@@ -177,25 +181,62 @@ function openNote(note: NoteItem) {
 }
 
 .filter-chip {
-  background: var(--color-background-soft);
+  position: relative;
+  overflow: visible;
+  background:color-mix(in srgb, var(--chip-color) 75%, transparent);
   border: 1px solid transparent;
   border-radius: 99px;
   padding: 0.5rem 1.2rem;
   font-size: 0.9rem;
   font-weight: 500;
-  color: var(--color-text);
+  color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    border-radius: 99px;
+    padding: 2px;
+    background: conic-gradient(
+      from 0deg,
+      transparent 75deg,
+      var(--chip-color, var(--p-surface-500, #64748b)) 90deg,
+      var(--chip-color, var(--p-surface-500, #64748b)) 180deg,
+      transparent 260deg
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
 
   &:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+
+    &::after {
+      opacity: 0;
+    }
   }
 
   &.active {
-    background: rgba(0,0,0,0.0);
-    color: var(--color-background);
+    background: transparent;
+    color: #fff;
+    &::after {
+      opacity: 0.7;
+    }
+
+    &:hover {
+      &::after {
+        opacity: 1;
+      }
+    }
   }
 }
 
