@@ -14,3 +14,7 @@ desc: >-
 F12 开发人员工具显示，对 hdslb.com 的请求全部触发 `NS_ERROR_LOCAL_NETWORK_ACCESS_DENIED` 错误，根据此链接：[Hikvision 最近在 Mozilla Firefox v 1.5.2 上停止显示实时串流和回放 | Reddit](https://www.reddit.com/r/Hikvision/comments/1uw56no/hikvision_recently_stopped_showing_live_feed_and/?tl=zh-hant)， 可知这和 firefox 在 `>140, <=152` 的某个版本引入的一项安全措施 `network.luna.blocking`，可在 `about:config` 中关闭。按操作关闭后，TUN 下的 bilibili 恢复正常。
 
 但还是很奇怪，如果和 firefox 有关，为什么关闭 TUN 之后没问题呢？或许和 TUN 的 DNS 假地址有关？猜测是 NS 解析到一个本地地址，再加上页面需要某种配置，激活了 firefox 的这项安全措施。
+
+> [!Note]
+> 后来发现实际上是当时使用的客户端，把 TUN 假地址设置为了 172.xx，而我所在的校园网内网最近正好切换到了 172.xx，所以可能触发了 firefox 的安全机制。不过说到底，这两个网段本来就不该重叠，更换 TUN 网段可能才是更本质的修复。
+
